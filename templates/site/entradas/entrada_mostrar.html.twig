@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ entrada.name }}
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div id="main" class="col-sm-9">
+            <h1>{{ entrada.name }}</h1>
+            <div class="well">
+                <p class="m-b-0">
+                    {{ entrada.description }}
+                </p>
+            </div>
+            <p class="post-tags">
+                {% for tag in entrada.tags %}
+                    <span class="tag label label-default">{{ tag.tag }}</span>
+                {% endfor %}
+            </p>
+            <a href="{{ path('site_index') }}">
+                Volver al listado de artículos
+            </a>
+        </div>
+        <div id="sidebar" class="col-sm-3">
+            <div class="section">
+                <a href="{{ path('site_entrada_editar', {'id': entrada.id}) }}" class="btn btn-lg btn-block btn-success">
+                    Editar entrada
+                </a>
+            </div>
+            <div class="section">
+                {{ include('site/entradas/_formulario_borrar.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

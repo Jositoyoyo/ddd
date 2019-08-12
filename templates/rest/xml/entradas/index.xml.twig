@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entradas>
+    {% for entrada in entradas %}
+        <entrada>
+            <id>{{ entrada.id }}</id>
+            <name>{{ entrada.name }}</name>
+            <description>{{ entrada.description }}</description>
+        </entrada>
+    {% else %}
+        <no-found>
+            Sin resultados
+        </no-found>
+    {% endfor %}
+</entradas>

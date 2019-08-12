@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Entradas
+{% endblock %}
+{% block body %}
+
+    <div class="row">
+        <div id="main" class="col-sm-9">
+            <table class="table table-striped table-middle-aligned">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            Título
+                        </th>
+                        <th scope="col" class="text-right">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entrada in entradas %}
+                        <tr>
+                            <td>{{ entrada.name }}</td>
+                            <td class="text-right">
+                                <div class="item-actions">
+                                    <a href="{{ path('site_entrada_mostrar', {'id': entrada.id}) }}" class="btn btn-sm btn-default">
+                                        Ver
+                                    </a>
+
+                                    <a href="{{ path('site_entrada_editar', {'id': entrada.id}) }}" class="btn btn-sm btn-primary">
+                                        Editar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>   
+        </div>
+        <div id="sidebar" class="col-sm-3">
+            <div class="section about">
+                <div class="section">
+                    <a href="{{ path('site_entrada_nueva') }}" class="btn btn-lg btn-block btn-success">
+                        Nueva entrada
+                    </a>
+                </div>
+                <div class="well well-lg">
+                    <p>
+                        Esta <strong>aplicación demo</strong> ha sido programada con el framework Symfony para mostrar un sitema de entradas y tags auto generados.
+                    </p>
+                    <p>
+                        Para más información, consulta la <a href="https://symfony.com/doc">documentación de Symfony</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

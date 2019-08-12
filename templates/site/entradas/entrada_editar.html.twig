@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Entrada{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div id="main" class="col-sm-9">
+            <h1>Editar Entrada</h1>
+            {{ include('site/entradas/_formulario.html.twig', {'button_label': 'Update'}) }}
+        </div>
+        <div id="sidebar" class="col-sm-3">
+            <div class="section actions">
+                {{ include('site/entradas/_formulario_borrar.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
