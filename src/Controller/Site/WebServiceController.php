@@ -27,15 +27,23 @@ class WebServiceController extends AbstractController
      */
     public function index(Request $request): Response
     {
+        return $this->render('webservice/index.html.twig', [
+                    'resultado' => null
+        ]);
+    }
 
-        if ($request->isMethod('POST')) {
+    /**
+     * @Route("/consultar", name="webservice_consultar", methods={"GET"})
+     */
+    public function consultar(Request $request): Response
+    {
 
-            $searchterms = $request->get('searchterms', null);
-            $search = $this->adysaGroup->search($searchterms);
+        $resultado = $this->adysaGroup->search(
+                $request->get('searchterms', null)
+        );
 
-            if (!$search) {
-                $this->addFlash('danger', 'No hay resultados en la busqueda');
-            }
+        if (!$resultado) {
+            $this->addFlash('danger', 'No hay resultados en la consulta');
         }
 
         return $this->render('webservice/index.html.twig', [

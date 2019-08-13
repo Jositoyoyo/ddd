@@ -2,24 +2,26 @@
 
 namespace App\Controller\Rest;
 
-use App\Entity\Entradas;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Entradas;
 
 /**
  * @Route("/rest")
  */
 class EntradasController extends AbstractController
 {
+
+    private $entradaRespository;
     private $entrada;
-    
+
     public function __construct()
     {
-        $this->entrada = $this->getDoctrine()
+        $this->entradaRespository = $this->getDoctrine()
                 ->getRepository(Entradas::class);
-        $this->entradaService= $this->container->get('entradaService');
+        $this->entrada = $this->container->get('entrada.service');
     }
 
     /**
@@ -27,7 +29,7 @@ class EntradasController extends AbstractController
      */
     public function index(): Response
     {
-        $entradas = $this->entrada->findAll();
+        $entradas = $this->entradaRespository->findAll();
         return $this->render('rest/xml/entradas/index.xml.twig', [
                     'entradas' => $entradas,
         ]);
@@ -39,18 +41,14 @@ class EntradasController extends AbstractController
     public function alta(Request $request): Response
     {
 
-        if ($request->isMethod('POST')) {
+        $entrada = $this->entrada->alta(
+                $request->request->get('name', null),
+                $request->request->get('description', null)
+        );
 
-            $entrada = $this->entradaService(
-                    $request->request->get('name', null),
-                    $request->request->get('description', null)
-            );
-
-            return $this->render('rest/xml/entradas/entrada_mostrar.xml.twig', [
-                        'entrada' => $entrada,
-            ]);
-            
-        }
+        return $this->render('rest/xml/entradas/entrada_mostrar.xml.twig', [
+                    'entrada' => $entrada,
+        ]);
     }
 
     /**
@@ -64,14 +62,15 @@ class EntradasController extends AbstractController
     }
 
     /**
-     * @Route("/entrada/{id}/editar", name="entrada_editar", methods={"GET","POST"}, defaults={"_format"="xml"})
+     * @Route("/entrada/{id}/editar", name="entrada_editar", methods={"POST"}, defaults={"_format"="xml"})
      */
-    public function editar(Request $request, Entradas $entrada, GenerateTags $generateTags): Response
+    public function editar(Request $request, Entrada $entrada): Response
     {
-
-        if ($request->isMethod('POST')) {
-
-        }
+        $entrada = $this->entrada->editar(
+                $entrada,
+                $request->request->get('name', null),
+                $request->request->get('description', null)
+        );
 
         return $this->render('rest/xml/entradas/entrada_mostrar.xml.twig', [
                     'entrada' => $entrada,
@@ -81,16 +80,14 @@ class EntradasController extends AbstractController
     /**
      * @Route("/entrada/{id}/borrar", name="entrada_borrar", methods={"DELETE"}, defaults={"_format"="xml"})
      */
-    public function borrar(Request $request, Entradas $entrada): Response
+    public function borrar(Entrada $entrada): Response
     {
-        if ($request->isMethod('DELETE')) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($entrada);
-            $entityManager->flush();
-            return $this->render('rest/xml/entradas/respuesta.xml.twig', [
+        $entrada = $this->entrada->borrar(
+                $entrada
+        );
+        return $this->render('rest/xml/entradas/respuesta.xml.twig', [
                     'entrada' => $entrada,
         ]);
-        }
     }
 
 }

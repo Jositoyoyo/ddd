@@ -5,11 +5,9 @@ namespace App\Service\Entrada;
 use App\Entity\Tags;
 use App\Entity\Entrada\Entrada;
 
-class EntradaUseCaseAlta
+class AdysaGroupWebUseCaseConsultar
 {
 
-    private $generateTags;
-    private $repositoryEntrada;
     private $container;
 
     public function __construct()
@@ -31,18 +29,18 @@ class EntradaUseCaseAlta
 
         $entrada = new Entrada($name, $description);
 
-        $this->repositoryEntrada->guardar($entrada);
+        try {
+            $this->repositoryEntrada->guardar($entrada);
+        } catch (\PDOException $ex) {
+            echo "Error : " . $ex->getMessage();
+        }
         $this->updateTagsCloud($entrada);
-        
         return $entrada;
-        
     }
 
-    private function updateTagsCloud(Entrada $entrada)
+    private function updateTagsCloud($entrada)
     {
-        $description = $entrada->getDescription();
-        $tags = $this->generateTags->generate($description)->tags();
-        $this->Tag->updateTagsCloud($tags, $entrada);
+        $this->repositoryTags->updateTagsCloud($entrada);
     }
 
 }
