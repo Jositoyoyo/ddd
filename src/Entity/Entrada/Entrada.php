@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Entrada;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -12,7 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="entradas")
  * @ORM\Entity(repositoryClass="App\Repository\EntradasRepository") 
  */
-class Entradas {
+class Entrada extends AbstractEntrada
+{
 
     /**
      * @var int
@@ -21,21 +22,21 @@ class Entradas {
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="description", type="string", length=1000, nullable=true)
      */
-    private $description;
+    protected $description;
 
     /**
      * @var Tag[]|ArrayCollection
@@ -46,58 +47,63 @@ class Entradas {
      *      inverseJoinColumns={@ORM\JoinColumn(name="id_tags", referencedColumnName="id")}
      *      )
      */
-    private $tags;
+    protected $tags;
 
-    public function __construct() {
+    /**
+     * @param type $name
+     * @param type $description
+     */
+    public function __construct($name, $description)
+    {
+        parent::__construct($name, $description);
         $this->tags = new ArrayCollection();
     }
 
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function setName(string $name) {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function setDescription(string $description) {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function addTag(Tags $tag): void {
+    /**
+     * @param \App\Entity\Entrada\Tags $tag
+     * @return void
+     */
+    public function addTag(Tags $tag): void
+    {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
         }
     }
 
-    public function removeTag(Tags $tag): void {
+    /**
+     * @param \App\Entity\Entrada\Tags $tag
+     * @return void
+     */
+    public function removeTag(Tags $tag): void
+    {
         $this->tags->removeElement($tag);
     }
 
-    public function getTags(): Collection {
+    /**
+     * @return Collection
+     */
+    public function getTags(): Collection
+    {
         return $this->tags;
     }
 
     /**
      * @return array
      */
-    public function getTagsArray() : array {
+    public function getTagsArray(): array
+    {
         $tagsObject = $this->tags;
         $tags = [];
         foreach ($tagsObject as $tag) {
             $tags[] = $tag->getTag();
         }
-        return $tags;        
+        return $tags;
+    }
+
+    public function setTags($string)
+    {
+        $tags = $this->generateTags->generateTags($string);
+    
     }
 
 }

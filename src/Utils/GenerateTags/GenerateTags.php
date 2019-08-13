@@ -2,23 +2,35 @@
 
 namespace App\Utils\GenerateTags;
 
-class GenerateTags implements IGenerateTags {
+class GenerateTags implements IGenerateTags
+{
 
     private $config;
+    private $tags;
 
-    public function __construct(array $config) {
+    public function __construct(array $config)
+    {
         $this->config = $config;
     }
 
     /**
-     * @param string $string
      * @return array
      */
-    public function generate(string $string): array {
-        
+    public function tags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string $string
+     * @return \App\Utils\GenerateTags\this
+     */
+    public function generate(string $string): this
+    {
+
         $string = preg_replace('/[^\p{L}0-9 ]/', ' ', $string);
-        $string = trim(preg_replace('/\s+/', ' ', $string));
-        $words = explode(' ', strtolower($string));
+        $stringFinal = trim(preg_replace('/\s+/', ' ', $string));
+        $words = explode(' ', strtolower($stringFinal));
 
         if ($this->config['allowed']) {
             $allowedWords = $this->config['allowedWords'];
@@ -48,8 +60,8 @@ class GenerateTags implements IGenerateTags {
                 array_push($final_keywords, $keyword_det[0]);
             }
         }
-        return array_slice($final_keywords, 0, $this->config['max_words']);
-        
+        $this->tags = array_slice($final_keywords, 0, $this->config['max_words']);
+        return ($this);
     }
 
 }
