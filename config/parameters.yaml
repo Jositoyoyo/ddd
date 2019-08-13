@@ -1,0 +1,3 @@
+parameters:
+    locale: 'en'
+    allowedWords: [PHP, MYSQL, SYMFONY, CAKEPHP]

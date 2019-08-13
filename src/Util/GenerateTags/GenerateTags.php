@@ -28,8 +28,8 @@ class GenerateTags implements IGenerateTags
     public function generate(string $string): this
     {
 
-        $string = preg_replace('/[^\p{L}0-9 ]/', ' ', $string);
-        $stringFinal = trim(preg_replace('/\s+/', ' ', $string));
+        $stringInicial = preg_replace('/[^\p{L}0-9 ]/', ' ', $string);
+        $stringFinal = trim(preg_replace('/\s+/', ' ', $stringInicial));
         $words = explode(' ', strtolower($stringFinal));
 
         if ($this->config['allowed']) {

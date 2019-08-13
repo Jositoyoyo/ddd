@@ -1,0 +1,7 @@
+services:
+                    
+    App\Util\GenerateTags\GenerateTags:
+        autowire: true
+        public: true
+        arguments:
+            $config: {min_word_length: 3, min_word_occurrence: 2, max_words: 8, allowedWords: '%allowedWords%', restrict: false, allowed: true}

@@ -1,7 +1,8 @@
-parameters:
-    locale: 'en'
-    allowedWords: [PHP, MYSQL, SYMFONY, CAKEPHP]
-        
+imports:
+    - { parameters: parameters.yml }
+    - { resource: service.yml }
+    - { resource: util.yml }
+       
 services:
     
     _defaults:
@@ -16,8 +17,4 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
                 
-    App\Utils\GenerateTags\GenerateTags:
-        autowire: true
-        public: true
-        arguments:
-            $config: {min_word_length: 3, min_word_occurrence: 2, max_words: 8, allowedWords: '%allowedWords%', restrict: false, allowed: true}
+  

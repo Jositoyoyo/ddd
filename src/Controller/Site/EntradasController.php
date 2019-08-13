@@ -17,12 +17,14 @@ use App\Utils\GenerateTags\GenerateTags;
 class EntradasController extends AbstractController
 {
 
-    private $entradas;
+    private $entradaRepository;
+    private $entradaUseCaseAlta;
 
     public function __construct()
     {
-        $this->entradas = $this->getDoctrine()
+        $this->entradaRepository = $this->getDoctrine()
                 ->getRepository(Entradas::class);
+        $this->entradaUseCaseAlta = $this->container->get('EntradasUseCaseAlta');
     }
 
     /**
@@ -31,38 +33,33 @@ class EntradasController extends AbstractController
     public function index(): Response
     {
 
-        $entradas = $this->entradas->findAll();
+        $entradas = $this->entradaRepository->findAll();
         return $this->render('site/entradas/index.html.twig', [
                     'entradas' => $entradas,
         ]);
     }
 
     /**
-     * @Route("/entrada-nueva", name="site_entrada_nueva", methods={"GET","POST"})
+     * @Route("/alta", name="site_entrada_nueva", methods={"GET","POST"})
      */
-    public function entradaNueva(Request $request): Response
+    public function alta(Request $request): Response
     {
 
-        $entrada = new Entrada();
-        $form = $this->createForm(EntradasType::class, $entrada);
+        $form = $this->createForm(EntradasType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($entrada);
-            $entityManager->flush();
-
-            $tags = $generateTags->generate($entrada->getDescription());
-            $this->getDoctrine()->getRepository(Tags::class)
-                    ->updateTagsCloud($tags, $entrada);
-
-            return $this->redirectToRoute('site_index');
-            
+            $entrada = $this->entradaUseCaseAlta(
+                    $request->request->get('name', null),
+                    $request->request->get('description', null)
+            );
+            return $this->redirectToRoute('site_entrada_mostrar', [
+                        'id', $entrada->getId()
+            ]);
         }
 
         return $this->render('site/entradas/entrada_nueva.html.twig', [
-                    'entrada' => $entrada,
+                    'entrada' => null,
                     'form' => $form->createView(),
         ]);
     }
@@ -70,7 +67,7 @@ class EntradasController extends AbstractController
     /**
      * @Route("/entrada/{id}/mostrar", name="site_entrada_mostrar", methods={"GET"})
      */
-    public function entradaMostrar(Entrada $entrada): Response
+    public function mostrar(Entrada $entrada): Response
     {
         return $this->render('site/entradas/entrada_mostrar.html.twig', [
                     'entrada' => $entrada,
@@ -80,7 +77,7 @@ class EntradasController extends AbstractController
     /**
      * @Route("/entrada/{id}/editar", name="site_entrada_editar", methods={"GET","POST"})
      */
-    public function entradaEditar(Request $request, Entrada $entrada): Response
+    public function editar(Request $request, Entrada $entrada): Response
     {
 
         $form = $this->createForm(EntradasType::class, $entrada);
@@ -88,35 +85,32 @@ class EntradasController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($entrada);
-            $entityManager->flush();
+            $entrada = $this->entradaUseCaseEditar(
+                    $request->request->get('name', null),
+                    $request->request->get('description', null)
+            );
 
-            $tags = $generateTags->generate($entrada->getDescription());
-            $this->getDoctrine()->getRepository(Tags::class)
-                    ->updateTagsCloud($tags, $entrada);
-
-            return $this->redirectToRoute('site_index');
         }
 
         return $this->render('site/entradas/entrada_editar.html.twig', [
                     'entrada' => $entrada,
                     'form' => $form->createView(),
         ]);
+        
     }
 
     /**
      * @Route("/entrada/{id}/borrar", name="site_entrada_borrar", methods={"DELETE"})
      */
-    public function entradaBorrar(Request $request, Entradas $entrada): Response
+    public function borrar(Request $request, Entradas $entrada): Response
     {
+        
         if ($this->isCsrfTokenValid('delete' . $entrada->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($entrada);
-            $entityManager->flush();
+            $this->entradaRepository->baja($entrada);
         }
 
         return $this->redirectToRoute('index');
+        
     }
 
 }
