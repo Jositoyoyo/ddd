@@ -11,7 +11,10 @@ abstract class AbstractEntrada
     protected $tags;
     protected $generateTags;
 
-    public function __construct($name, $description, $config)
+    public function __construct(
+            $name,
+            $description,
+            $config)
     {
         $this->name = $name;
         $this->description = $description;
@@ -37,11 +40,5 @@ abstract class AbstractEntrada
 
     abstract public function getTags();
 
-    /**
-     * @return array
-     */
     abstract public function getTagsArray(): array;
-
-
-
 }

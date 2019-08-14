@@ -2,8 +2,8 @@
 
 namespace App\Service\Entrada;
 
-use App\Entity\Tags;
 use App\Entity\Entrada\Entrada;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EntradaUseCaseAlta
 {
@@ -11,11 +11,12 @@ class EntradaUseCaseAlta
     private $generateTags;
     private $repositoryEntrada;
     private $container;
+    private $doctrine;
 
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
-        $this->doctrine = $this->container->getDoctrine()
-                ->getRepository(Tags::class);
+        $this->container = $container;
+        $this->doctrine = $container->getDoctrine();
     }
 
     /**
@@ -32,17 +33,23 @@ class EntradaUseCaseAlta
         $entrada = new Entrada($name, $description);
 
         $this->repositoryEntrada->guardar($entrada);
-        $this->updateTagsCloud($entrada);
-        
+        $entrada = $this->updateTagsCloud($entrada);
+
+        $entrada = $this->EntradaAltaHandler
+                ->setNext($altaEntrada)
+                ->setNext($actualizarTags);
+
         return $entrada;
-        
     }
 
-    private function updateTagsCloud(Entrada $entrada)
+    private function updateTagsCloud(Entrada $entrada): Entrada
     {
         $description = $entrada->getDescription();
         $tags = $this->generateTags->generate($description)->tags();
-        $this->Tag->updateTagsCloud($tags, $entrada);
+        if ($tags) {
+            $entrada = $this->TagRepository->updateTagsCloud($tags, $entrada);
+        }
+        return $entrada;
     }
 
 }

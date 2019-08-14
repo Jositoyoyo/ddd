@@ -19,7 +19,15 @@ class EntradaUseCase
             string $description): EntradaUseCaseAlta
     {
         $alta = new EntradaUseCaseAlta($this->container);
-        return $alta($name, $description);
+        return $alta->__invoke($name, $description);
+    }
+
+    public function editar(
+            string $name,
+            string $description): EntradaUseCaseEditar
+    {
+        $alta = new EntradaUseCaseEditar($this->container);
+        return $alta->__invoke($name, $description);
     }
 
     public function borrar(

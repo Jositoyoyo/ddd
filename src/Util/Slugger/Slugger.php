@@ -2,10 +2,6 @@
 
 namespace App\Utils\Slugger;
 
-/**
- * @author Ryan Weaver <weaverryan@gmail.com>
- * @author Javier Eguiluz <javier.eguiluz@gmail.com>
- */
 class Slugger {
 
     public static function slugify(string $string): string {
