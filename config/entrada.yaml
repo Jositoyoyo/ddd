@@ -1,5 +1,5 @@
 services:
-     entrada.use.case:
+    entradaUseCase:
         class: App\Service\Entrada\EntradaUseCase
         autowire: false
         arguments: ['@service_container']

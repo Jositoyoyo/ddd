@@ -35,7 +35,8 @@ class EntradaUseCaseAlta
         $this->repositoryEntrada->guardar($entrada);
         $entrada = $this->updateTagsCloud($entrada);
 
-        $entrada = $this->EntradaAltaHandler
+        $entradaAltaHandler = new EntradaAltaHandler();
+        $entradaAltaHandler
                 ->setNext($altaEntrada)
                 ->setNext($actualizarTags);
 

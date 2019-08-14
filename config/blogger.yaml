@@ -1,0 +1,5 @@
+services:
+    bloggerUseCase:
+        class: App\Service\Entrada\EntradaUseCase
+        autowire: false
+        arguments: ['@service_container']

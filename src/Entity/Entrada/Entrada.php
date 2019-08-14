@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Entradas
  *
- * @ORM\Table(name="entradas")
+ * @ORM\Table(nombre="entradas")
  * @ORM\Entity(repositoryClass="App\Repository\EntradasRepository") 
  */
 class Entrada extends AbstractEntrada
@@ -18,7 +18,7 @@ class Entrada extends AbstractEntrada
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(nombre="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -27,35 +27,35 @@ class Entrada extends AbstractEntrada
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @ORM\Column(nombre="nombre", type="string", length=100, nullable=false)
      */
-    protected $name;
+    protected $nombre;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="description", type="string", length=1000, nullable=true)
+     * @ORM\Column(nombre="entrada", type="string", length=1000, nullable=true)
      */
-    protected $description;
+    protected $entrada;
 
     /**
      * @var Tag[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\Tags", cascade={"persist"})
-     * @ORM\JoinTable(name="entradas_tags",
-     *      joinColumns={@ORM\JoinColumn(name="id_entradas", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="id_tags", referencedColumnName="id")}
+     * @ORM\JoinTable(nombre="entradas_tags",
+     *      joinColumns={@ORM\JoinColumn(nombre="id_entradas", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(nombre="id_tags", referencedColumnName="id")}
      *      )
      */
     protected $tags;
 
     /**
-     * @param type $name
-     * @param type $description
+     * @param type $nombre
+     * @param type $entrada
      */
-    public function __construct($name, $description)
+    public function __construct($nombre, $entrada)
     {
-        parent::__construct($name, $description);
+        parent::__construct($nombre, $entrada);
         $this->tags = new ArrayCollection();
     }
 
@@ -100,10 +100,5 @@ class Entrada extends AbstractEntrada
         return $tags;
     }
 
-    public function setTags($string)
-    {
-        $tags = $this->generateTags->generateTags($string);
-    
-    }
 
 }

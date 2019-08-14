@@ -6,19 +6,20 @@ abstract class AbstractEntrada
 {
 
     protected $id;
-    protected $name;
-    protected $description;
+    protected $estado;
+    protected $nombre;
+    protected $slug;
+    protected $entrada;
+    protected $herramienta;
+    protected $categoria;
     protected $tags;
-    protected $generateTags;
 
     public function __construct(
             $name,
-            $description,
-            $config)
+            $description)
     {
         $this->name = $name;
         $this->description = $description;
-        $this->generateTags = new \App\Utils\GenerateTags\GenerateTags($config);
     }
 
     public function getId()
@@ -31,9 +32,19 @@ abstract class AbstractEntrada
         return $this->name;
     }
 
-    public function getDescription()
+    public function getSlug()
     {
-        return $this->description;
+        return $this->slug;
+    }
+
+    public function getEntrada()
+    {
+        return $this->entrada;
+    }
+
+    public function getHerramienta()
+    {
+        return $this->herramienta;
     }
 
     abstract public function removeTag(): void;

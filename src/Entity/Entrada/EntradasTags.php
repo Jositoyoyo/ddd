@@ -5,12 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EntradasTags
+ * EntradaTag
  *
  * @ORM\Table(name="entradas_tags", uniqueConstraints={@ORM\UniqueConstraint(name="entradas_tags_UNIQUE", columns={"id_tags", "id_entradas"})}, indexes={@ORM\Index(name="fk_entradas_tags_id_entradas_idx", columns={"id_entradas"}), @ORM\Index(name="fk_entradas_tags_id_tags_idx", columns={"id_tags"})})
  * @ORM\Entity
  */
-class EntradasTags {
+class EntradaTag {
 
     /**
      * @var int

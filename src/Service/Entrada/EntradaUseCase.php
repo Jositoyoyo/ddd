@@ -14,12 +14,17 @@ class EntradaUseCase
         $this->container = $container;
     }
 
-    public function alta(
+    public function altaManual(
             string $name,
             string $description): EntradaUseCaseAlta
     {
         $alta = new EntradaUseCaseAlta($this->container);
         return $alta->__invoke($name, $description);
+    }
+    
+    public function altaAuto($entradas)
+    {
+        
     }
 
     public function editar(

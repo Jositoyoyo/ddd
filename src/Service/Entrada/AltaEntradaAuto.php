@@ -4,28 +4,15 @@ namespace App\Service\Entrada;
 
 use App\Entity\Entrada\Entrada;
 
-class BloggerUseCaseConvertirEntrada
+class AltaEntradaAuto
 {
-
-    private $container;
-    private $doctrine;
-    private $bloggerService;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-        $this->doctrine = $container->getDoctrine();
-        $this->bloggerService = $container->get('bloggerService');
-    }
 
     /**
      * @param string $name
      * @param string $description
      * @return Entrada
      */
-    public function __invoke(
-            string $url
-    ): Entrada
+    public function __invoke(): Entrada
     {
 
         $entradaBlogger = $this->bloggerService->getByUrl($url);
